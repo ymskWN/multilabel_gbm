@@ -49,6 +49,7 @@ reportUnknownArgumentType = false
 reportUnknownVariableType = false
 reportIncompatibleMethodOverride = false
 reportMissingTypeStubs = false
+exclude=["data/**"]
 
 [tool.rye.scripts]
 lint = { chain = ["lint:ruff", "lint:pyright"] }
