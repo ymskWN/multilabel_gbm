@@ -8,14 +8,15 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.datasets import mnist
 
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
-print(X_train[0])
-print(y_train[0])
+print(X_train[0].shape)
+print(y_train[0].shape)
 X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=0)
 
 # 各データを1次元に変換
 X_train = X_train.reshape(-1, 784)
 X_valid = X_valid.reshape(-1, 784)
 X_test = X_test.reshape(-1, 784)
+print(X_train[0].shape)
 
 # 正規化
 X_train = X_train.astype("float32")
