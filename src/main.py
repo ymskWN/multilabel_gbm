@@ -1,6 +1,6 @@
 """lightgbm for multilabel classification."""
-import lightgbm as lgb
 import numpy as np
+import optuna.integration.lightgbm as lgb_o
 
 # 評価指標は以下４つ
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
@@ -25,8 +25,8 @@ X_valid /= 255
 X_test /= 255
 
 # 訓練・検証データの設定
-train_data = lgb.Dataset(X_train, label=y_train)
-eval_data = lgb.Dataset(X_valid, label=y_valid, reference=train_data)
+train_data = lgb_o.Dataset(X_train, label=y_train)
+eval_data = lgb_o.Dataset(X_valid, label=y_valid, reference=train_data)
 
 # パラメータ設定
 params = {
@@ -36,9 +36,18 @@ params = {
     "num_class": 10,  # 分類クラス数
     "metric": "multi_logloss",  # 評価指標は多クラスのLog損失
 }
-# モデル作成
-gbm = lgb.train(params, train_data, valid_sets=eval_data, num_boost_round=100, early_stopping_rounds=10)
 
+best_params = {}
+# モデル作成
+gbm = lgb_o.train(
+    params,
+    train_data,
+    valid_sets=[train_data, eval_data],  # ここがチューニングしない場合と違う
+    num_boost_round=100,
+    early_stopping_rounds=10,
+)
+best_params = gbm.params
+print(best_params)
 # 予測
 preds = gbm.predict(X_test, num_iteration=gbm.best_iteration)
 
