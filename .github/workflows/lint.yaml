@@ -1,0 +1,31 @@
+name: lint
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            # TODO Add editorconfig 
+            - name: Install Rye
+              run: |
+                curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
+                echo "$HOME/.rye/shims" >> $GITHUB_PATH
+            - name: Install dependencies
+              run: rye sync --no-lock
+            - name: Check Python files with Ruff
+              run: |
+                rye run ruff --version
+                rye run lint:ruff
+            - name: Check Python files with pyright
+              run: |
+                rye run pyright --version
+                rye run lint:pyright
+

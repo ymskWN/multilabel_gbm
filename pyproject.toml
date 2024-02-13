@@ -1,0 +1,57 @@
+[project]
+name = "rye-template"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "whalenap", email = "whalenap@whalenap.net" }
+]
+dependencies = [
+    "ruff>=0.1.6",
+    "pyright>=1.1.338",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+
+# 追加した設定
+[tool.ruff]
+include = ["src"]
+target-version = "py310"
+line-length = 110
+select = ["E","F","W","C90","I","N","D","UP","B","A","COM","C4","EM","FA","ISC","INP","PIE","PYI","PT","Q","SLF","SIM","TCH","PTH","RUF",]
+ignore = ["D203","D213"]
+
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+reportUnknownVariableType = false
+reportIncompatibleMethodOverride = false
+reportMissingTypeStubs = false
+
+[tool.rye.scripts]
+lint = { chain = ["lint:ruff", "lint:pyright"] }
+"lint:ruff" = "ruff check ."
+"lint:pyright" = "pyright"
+format = { chain = ["format:black", "format:ruff"] }
+"format:black" = "black ."
+"format:ruff" = "ruff --fix ."
+
+
+
+
